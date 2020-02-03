@@ -1,12 +1,11 @@
 import React from 'react';
 import './App.css';
+import ChartWarapper from './components/ChartWrapper';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Hello</h1>
-      </header>
+      <ChartWarapper />
     </div>
   );
 }
