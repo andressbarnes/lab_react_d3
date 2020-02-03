@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import ChartWarapper from './components/ChartWrapper';
 
 function App() {

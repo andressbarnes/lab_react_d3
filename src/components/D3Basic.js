@@ -2,7 +2,7 @@ import * as d3 from 'd3'; //TODO refine import later
 
 const url = 'https://udemy-react-d3.firebaseio.com/ages.json';
 
-export default class D3Chart {
+class D3Chart {
   constructor(element) {
     const svg = d3
       .select(element)
@@ -26,3 +26,5 @@ export default class D3Chart {
     });
   }
 }
+
+export default D3Chart;
