@@ -21,8 +21,7 @@ class D3BarChart {
       .append('text')
       .attr('x', WIDTH / 2)
       .attr('y', HEIGHT + 50)
-      .attr('text-anchor', 'middle')
-      .text(`The world's tallest men`);
+      .attr('text-anchor', 'middle');
 
     vis.svg
       .append('text')
@@ -36,24 +35,26 @@ class D3BarChart {
       .append('g')
       .attr('transform', `translate(0, ${HEIGHT})`);
 
+    vis.xLabel = vis.svg
+      .append('text')
+      .attr('x', WIDTH / 2)
+      .attr('y', HEIGHT + 50)
+      .attr('text-anchor', 'middle');
+
     vis.yAxisGroup = vis.svg.append('g');
 
     Promise.all([d3.json(url1), d3.json(url2)]).then(datasets => {
-      const [men, women] = datasets;
-      let flag = true;
-      vis.data = men;
-      vis.update();
-      d3.interval(() => {
-        vis.data = flag ? men : women;
-        vis.update();
-        flag = !flag;
-      }, 2000);
+      vis.menData = datasets[0];
+      vis.womenData = datasets[1];
+      vis.update('men');
     });
   }
 
-  update() {
+  update(gender) {
     //call when data is changed
     const vis = this;
+    vis.data = gender === 'men' ? vis.menData : vis.womenData;
+    vis.xLabel.text(`The world's tallest ${gender}`);
     const yScale = d3
       .scaleLinear()
       .domain([
@@ -92,7 +93,8 @@ class D3BarChart {
       .duration(500)
       .attr('y', HEIGHT)
       .attr('height', 0)
-      .remove();
+      .remove()
+      .attr('fill', 'transparent');
 
     //UPDATE
     rects
@@ -101,7 +103,10 @@ class D3BarChart {
       .attr('x', d => xScale(d.name))
       .attr('y', d => yScale(d.height))
       .attr('width', xScale.bandwidth)
-      .attr('height', d => HEIGHT - yScale(d.height));
+      .attr('height', d => HEIGHT - yScale(d.height))
+      .attr('fill', d => {
+        return gender === 'men' ? 'blue' : 'red';
+      });
 
     //ENTER
     rects
@@ -109,14 +114,15 @@ class D3BarChart {
       .append('rect')
       .attr('x', d => xScale(d.name))
       .attr('width', xScale.bandwidth)
-      .attr('fill', d => {
-        return d.height > 270 ? 'red' : 'green';
-      })
+
       .attr('y', HEIGHT)
       .transition()
       .duration(500)
       .attr('y', d => yScale(d.height))
-      .attr('height', d => HEIGHT - yScale(d.height));
+      .attr('height', d => HEIGHT - yScale(d.height))
+      .attr('fill', d => {
+        return gender === 'men' ? 'blue' : 'red';
+      });
   }
 }
 
