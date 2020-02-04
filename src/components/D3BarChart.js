@@ -1,6 +1,7 @@
 import * as d3 from 'd3'; //TODO refine import later
 
-const url = 'https://udemy-react-d3.firebaseio.com/tallest_men.json';
+const url1 = 'https://udemy-react-d3.firebaseio.com/tallest_men.json';
+const url2 = 'https://udemy-react-d3.firebaseio.com/tallest_women.json';
 const MARGIN = { TOP: 10, BOTTOM: 50, LEFT: 70, RIGHT: 10 };
 const WIDTH = 800 - MARGIN.LEFT - MARGIN.RIGHT;
 const HEIGHT = 500 - MARGIN.TOP - MARGIN.BOTTOM;
@@ -37,11 +38,21 @@ class D3BarChart {
 
     vis.yAxisGroup = vis.svg.append('g');
 
-    d3.json(url).then(data => {
-      vis.data = data;
+    // d3.json(url).then(data => {
+    //   vis.data = data;
+    //   d3.interval(() => {
+    //     vis.update();
+    //   }, 3000);
+    // });
+
+    Promise.all([d3.json(url1), d3.json(url2)]).then(datasets => {
+      const [men, women] = datasets;
+      let flag = true;
       d3.interval(() => {
+        vis.data = flag ? men : women;
         vis.update();
-      }, 3000);
+        flag = !flag;
+      }, 2000);
     });
   }
 
@@ -70,8 +81,20 @@ class D3BarChart {
     const yAxisCall = d3.axisLeft(yScale);
     vis.yAxisGroup.call(yAxisCall);
 
+    //DATA JOIN
     const rects = vis.svg.selectAll('rect').data(vis.data);
 
+    //EXIT
+    rects.exit().remove();
+
+    //UPDATE
+    rects
+      .attr('x', d => xScale(d.name))
+      .attr('y', d => yScale(d.height))
+      .attr('width', xScale.bandwidth)
+      .attr('height', d => HEIGHT - yScale(d.height));
+
+    //ENTER
     rects
       .enter()
       .append('rect')
