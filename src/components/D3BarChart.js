@@ -38,16 +38,11 @@ class D3BarChart {
 
     vis.yAxisGroup = vis.svg.append('g');
 
-    // d3.json(url).then(data => {
-    //   vis.data = data;
-    //   d3.interval(() => {
-    //     vis.update();
-    //   }, 3000);
-    // });
-
     Promise.all([d3.json(url1), d3.json(url2)]).then(datasets => {
       const [men, women] = datasets;
       let flag = true;
+      vis.data = men;
+      vis.update();
       d3.interval(() => {
         vis.data = flag ? men : women;
         vis.update();
@@ -75,20 +70,34 @@ class D3BarChart {
 
     //add x axis
     const xAxisCall = d3.axisBottom(xScale);
-    vis.xAxisGroup.call(xAxisCall);
+    vis.xAxisGroup
+      .transition()
+      .duration(500)
+      .call(xAxisCall);
 
     //add y axis
     const yAxisCall = d3.axisLeft(yScale);
-    vis.yAxisGroup.call(yAxisCall);
+    vis.yAxisGroup
+      .transition()
+      .duration(500)
+      .call(yAxisCall);
 
     //DATA JOIN
     const rects = vis.svg.selectAll('rect').data(vis.data);
 
     //EXIT
-    rects.exit().remove();
+    rects
+      .exit()
+      .transition()
+      .duration(500)
+      .attr('y', HEIGHT)
+      .attr('height', 0)
+      .remove();
 
     //UPDATE
     rects
+      .transition()
+      .duration(500)
       .attr('x', d => xScale(d.name))
       .attr('y', d => yScale(d.height))
       .attr('width', xScale.bandwidth)
@@ -99,12 +108,15 @@ class D3BarChart {
       .enter()
       .append('rect')
       .attr('x', d => xScale(d.name))
-      .attr('y', d => yScale(d.height))
       .attr('width', xScale.bandwidth)
-      .attr('height', d => HEIGHT - yScale(d.height))
       .attr('fill', d => {
         return d.height > 270 ? 'red' : 'green';
-      });
+      })
+      .attr('y', HEIGHT)
+      .transition()
+      .duration(500)
+      .attr('y', d => yScale(d.height))
+      .attr('height', d => HEIGHT - yScale(d.height));
   }
 }
 
