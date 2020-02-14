@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import D3Hooks from './components/D3Hooks';
-import GenderDropdown from './components/GenderDropdown';
+import BasicCircles from './components/BasicCircles';
+import LineChart from './components/LineChart';
 import { Navbar, NavbarBrand, Container, Row, Col } from 'react-bootstrap';
 
 class App extends Component {
   state = {
+    gender: 'male',
     data: [
       { age: '10', name: 'Tony' },
       { age: '12', name: 'Jessica' },
@@ -34,17 +35,19 @@ class App extends Component {
     return (
       <div className="App">
         <Navbar bg="light" variant="light">
-          <NavbarBrand>Barchartly</NavbarBrand>
+          <NavbarBrand>D3 + ReactJS </NavbarBrand>
         </Navbar>
         <Container>
           <Row>
             <Col xs={12}>
-              <GenderDropdown func={this.updateGender} />
+              <h1>Basic Circles</h1>
+              <BasicCircles />
             </Col>
           </Row>
           <Row>
             <Col xs={12}>
-              <D3Hooks data={this.state.data} />
+              <h1>Basic Lines</h1>
+              <LineChart />
             </Col>
           </Row>
         </Container>

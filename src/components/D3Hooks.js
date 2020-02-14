@@ -1,61 +1,71 @@
 import React, { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 
+//SET SVG BOUNDS
+const MARGIN = { TOP: 10, BOTTOM: 50, LEFT: 70, RIGHT: 10 };
+const WIDTH = 800 - MARGIN.LEFT - MARGIN.RIGHT;
+const HEIGHT = 400 - MARGIN.TOP - MARGIN.BOTTOM;
+
 /* Component */
 const D3Hooks = props => {
-  //const url = 'https://udemy-react-d3.firebaseio.com/ages.json';
-
-  /* The useRef Hook creates a variable that "holds on" to a value across rendering
-       passes. In this case it will hold our component's SVG DOM element. It's
-       initialized null and React will assign it later (see the return statement) */
+  console.log(props);
   const d3Container = useRef(null);
 
-  /* The useEffect Hook is for running side effects outside of React,
-       for instance inserting elements into the DOM using D3 */
-  useEffect(
-    () => {
-      if (props.data && d3Container.current) {
-        const svg = d3.select(d3Container.current);
-        console.log({ props });
+  //chart stage (will not change)
+  useEffect(() => {
+    const svg = d3
+      .select(d3Container.current)
+      .append('svg')
+      .attr('width', WIDTH + MARGIN.LEFT + MARGIN.RIGHT)
+      .attr('height', HEIGHT + MARGIN.TOP + MARGIN.BOTTOM)
+      .append('g')
+      .attr('transform', `translate(${MARGIN.LEFT},${MARGIN.TOP})`);
+  });
 
-        const rects = svg.selectAll('rect').data(props.data);
+  useEffect(() => {
+    const svg = d3.select(d3Container.current);
+    const rects = svg.selectAll('rect').data(props.data);
 
-        //EXIT
-        rects
-          .exit()
-          .transition()
-          .duration(500)
-          .attr('height', 0)
-          .remove()
-          .attr('fill', 'transparent');
+    //ENTER
+    rects
+      .enter()
+      .append('rect')
+      .attr('x', (d, i) => i * 50 + 800 / 5)
+      .attr('y', 50)
+      .attr('width', 40)
+      .transition()
+      .duration(500)
+      .attr('height', d => 100 + d.age * 4)
+      .attr('fill', d => {
+        return d.age > 10 ? 'red' : 'green';
+      });
 
-        rects
-          .enter()
-          .append('rect')
-          .attr('x', (d, i) => i * 50)
-          .attr('y', 50)
-          .attr('width', 20)
-          .transition()
-          .duration(500)
-          .attr('height', d => 100 + d.age * 4)
-          .attr('fill', d => {
-            return d.age > 10 ? 'red' : 'green';
-          });
-      }
-    },
+    //EXIT
+    rects
+      .exit()
+      .transition()
+      .duration(500)
+      .attr('y', HEIGHT)
+      .attr('height', 0)
+      .remove()
+      .attr('fill', 'transparent');
 
-    /*
-            useEffect has a dependency array (below). It's a list of dependency
-            variables for this useEffect block. The block will run after mount
-            and whenever any of these variables change. We still have to check
-            if the variables are valid, but we do not have to compare old props
-            to next props to decide whether to rerender.
-        */
-    [props]
-  );
+    //UPDATE
+    rects
+      .transition()
+      .duration(500)
+      .attr('fill', d => {
+        return props.gender === 'men' ? 'blue' : 'red';
+      });
+  }, [props]);
 
   return (
-    <svg className="d3-component" width={800} height={200} ref={d3Container} />
+    <svg
+      className="d3-component"
+      width={WIDTH}
+      height={HEIGHT}
+      ref={d3Container}
+    />
   );
 };
 
