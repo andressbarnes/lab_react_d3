@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import BasicCircles from './components/BasicCircles';
 import LineChart from './components/LineChart';
+import AxesScales from './components/AxesScales';
+import BarChart from './components/BarChart';
 import { Navbar, NavbarBrand, Container, Row, Col } from 'react-bootstrap';
 
 class App extends Component {
@@ -40,6 +42,12 @@ class App extends Component {
         <Container>
           <Row>
             <Col xs={12}>
+              <h1>Colorized Animated Bar Chart</h1>
+              <BarChart />
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={12}>
               <h1>Basic Circles</h1>
               <BasicCircles />
             </Col>
@@ -48,6 +56,12 @@ class App extends Component {
             <Col xs={12}>
               <h1>Basic Lines</h1>
               <LineChart />
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={12}>
+              <h1>Axes and Scales</h1>
+              <AxesScales />
             </Col>
           </Row>
         </Container>

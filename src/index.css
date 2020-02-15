@@ -14,4 +14,9 @@ code {
 
 svg {
   background: #eeeeee;
+  margin-bottom: 20px;
+}
+
+.d3-overflow {
+  overflow: visible;
 }
