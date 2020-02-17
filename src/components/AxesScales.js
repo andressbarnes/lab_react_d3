@@ -7,6 +7,7 @@ import {
   axisRight,
   scaleLinear
 } from 'd3';
+import { Segment, Button } from 'semantic-ui-react';
 
 const AxesScales = () => {
   const origData = [18, 20, 90, 70, 30, 50];
@@ -56,19 +57,22 @@ const AxesScales = () => {
   }, [data]);
   return (
     <React.Fragment>
-      <div>Data: [{data.map(e => `${e},`)}]</div>
-      <svg className="d3-overflow" width="500" height="200" ref={svgLineRef}>
+      <Segment>Data: [{data.map(e => `${e},`)}]</Segment>
+      <svg className="d3-overflow mb" width="500" height="200" ref={svgLineRef}>
         <g className="x-axis" />
         <g className="y-axis" />
       </svg>
       <div>
-        <button
+        <Button
+          size="tiny"
+          as="a"
+          primary
           onClick={() =>
             setData(data.map(v => Math.floor(Math.random() * Math.floor(200))))
           }
         >
           Update Data
-        </button>
+        </Button>
       </div>
     </React.Fragment>
   );

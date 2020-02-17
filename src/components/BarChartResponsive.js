@@ -1,43 +1,49 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { select, axisBottom, axisRight, scaleLinear, scaleBand } from 'd3';
+import useResizeObserver from '../hooks/useResizeObserver';
 import { Button, Segment } from 'semantic-ui-react';
 
-const BarChart = () => {
+const BarChartResponsive = () => {
   const colors = ['#99c2ff', '#4d94ff', '#0066ff', '#0047b3'];
   const origData = [18, 20, 90, 70, 30, 50];
   const [data, setData] = useState(origData);
 
-  const svgBarRef = useRef();
-  useEffect(() => {
-    const svg = select(svgBarRef.current);
+  const svgBarResRef = useRef();
+  const wrapperRef = useRef();
+  const dimensions = useResizeObserver(wrapperRef);
 
-    const xScale = scaleBand()
-      .domain(data.map((d, i) => i))
-      .range([0, 500])
-      .padding(0.5);
+  useEffect(() => {
+    const svg = select(svgBarResRef.current);
+
+    if (!dimensions) return;
 
     const colorScale = scaleLinear()
       .domain([200, 150, 100, 50])
       .range(colors.reverse(c => c))
       .clamp(true);
 
+    const xScale = scaleBand()
+      .domain(data.map((d, i) => i))
+      .range([0, dimensions.width]) //change
+      .padding(0.5);
+
     //yAxis
     const yScale = scaleLinear()
-      .domain([200, 0])
-      .range([0, 200]);
+      .domain([200, 0]) //todo
+      .range([0, dimensions.height]); //change
 
     const xAxis = axisBottom(xScale)
       .ticks(data.length)
       .tickFormat(index => index + 1);
     svg
       .select('.x-axis')
-      .style('transform', 'translateY(200px)')
+      .style('transform', `translateY(${dimensions.height}px)`)
       .call(xAxis);
 
     const yAxis = axisRight(yScale);
     svg
       .select('.y-axis')
-      .style('transform', 'translateX(500px)')
+      .style('transform', `translateX(${dimensions.width}px)`)
       .call(yAxis);
 
     svg
@@ -48,7 +54,7 @@ const BarChart = () => {
       .attr('x', (v, i) => xScale(i))
       .attr('width', xScale.bandwidth())
       .style('transform', 'scale(1, -1')
-      .attr('y', -200)
+      .attr('y', -dimensions.height)
       .on('mouseenter', (v, i) => {
         svg
           .selectAll('.d3tooltip')
@@ -65,16 +71,18 @@ const BarChart = () => {
       .on('mouseleave', () => svg.select('.d3tooltip').remove())
       .transition()
       .duration(300)
-      .attr('height', v => 200 - yScale(v))
+      .attr('height', v => dimensions.height - yScale(v))
       .attr('fill', colorScale);
-  }, [data, colors]);
+  }, [data, colors, dimensions]);
   return (
     <React.Fragment>
       <Segment>Data: [{data.map(e => `${e}, `)}]</Segment>
-      <svg className="d3-overflow mb" width="500" height="200" ref={svgBarRef}>
-        <g className="x-axis" />
-        <g className="y-axis" />
-      </svg>
+      <div ref={wrapperRef} style={{ marginBottom: '2rem' }}>
+        <svg className="d3-overflow d3-responsive" ref={svgBarResRef}>
+          <g className="x-axis" />
+          <g className="y-axis" />
+        </svg>
+      </div>
       <div>
         <Button
           size="tiny"
@@ -91,7 +99,7 @@ const BarChart = () => {
           size="tiny"
           as="a"
           primary
-          tabIndex="0"
+          tabIndex="1"
           onClick={() =>
             setData([...data, Math.floor(Math.random() * Math.floor(200))])
           }
@@ -102,7 +110,7 @@ const BarChart = () => {
           size="tiny"
           as="a"
           primary
-          tabIndex="0"
+          tabIndex="2"
           onClick={() => setData(origData)}
         >
           Restore Data
@@ -112,4 +120,4 @@ const BarChart = () => {
   );
 };
 
-export default BarChart;
+export default BarChartResponsive;

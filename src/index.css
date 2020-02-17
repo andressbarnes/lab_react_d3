@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #ffffff !important;
 }
 
 code {
@@ -12,11 +13,26 @@ code {
     monospace;
 }
 
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  height: 100vh;
+  padding: 0 50px;
+}
+
 svg {
   background: #eeeeee;
-  margin-bottom: 20px;
 }
 
 .d3-overflow {
-  overflow: visible;
+  overflow: visible !important;
+}
+
+.d3-responsive {
+  width: 100%;
+}
+
+.mb {
+  margin-bottom: 20px;
 }

@@ -3,7 +3,9 @@ import BasicCircles from './components/BasicCircles';
 import LineChart from './components/LineChart';
 import AxesScales from './components/AxesScales';
 import BarChart from './components/BarChart';
-import { Navbar, NavbarBrand, Container, Row, Col } from 'react-bootstrap';
+import BarChartResponsive from './components/BarChartResponsive';
+import BBTimeline from './components/BBTimeline';
+import { Container, Grid, Header, Button } from 'semantic-ui-react';
 
 class App extends Component {
   state = {
@@ -35,37 +37,45 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <Navbar bg="light" variant="light">
-          <NavbarBrand>D3 + ReactJS </NavbarBrand>
-        </Navbar>
-        <Container>
-          <Row>
-            <Col xs={12}>
-              <h1>Colorized Animated Bar Chart</h1>
-              <BarChart />
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={12}>
-              <h1>Basic Circles</h1>
-              <BasicCircles />
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={12}>
-              <h1>Basic Lines</h1>
-              <LineChart />
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={12}>
-              <h1>Axes and Scales</h1>
-              <AxesScales />
-            </Col>
-          </Row>
-        </Container>
-      </div>
+      <Grid container style={{ padding: '5em 0em' }}>
+        <Grid.Row>
+          <Grid.Column>
+            <Header as="h1" dividing>
+              ReactJS + D3 Examples
+            </Header>
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column className="mb">
+            <h3>Colorized Animated Bar Chart</h3>
+            <BarChart />
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column className="mb">
+            <h3>Colorized Animated Bar Chart - Responsive</h3>
+            <BarChartResponsive />
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column className="mb">
+            <h3>Basic Circles</h3>
+            <BasicCircles />
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column className="mb">
+            <h3>Basic Lines</h3>
+            <LineChart />
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column className="mb">
+            <h3>Axes and Scales</h3>
+            <AxesScales />
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     );
   }
 }

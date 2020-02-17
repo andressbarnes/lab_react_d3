@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { select } from 'd3';
+import { Button, Segment } from 'semantic-ui-react';
 
 const BasicCircles = () => {
   const origData = [18, 20, 13, 39, 27];
@@ -36,16 +37,33 @@ const BasicCircles = () => {
   }, [data]);
   return (
     <React.Fragment>
-      <div>Data: [{data.map(e => `${e},`)}]</div>
-      <svg className="d3-component" width="500" height="200" ref={svgRef}></svg>
+      <Segment>Data: [{data.map(e => `${e}, `)}]</Segment>
+      <svg
+        className="d3-component mb"
+        width="500"
+        height="200"
+        ref={svgRef}
+      ></svg>
       <div>
-        <button onClick={() => setData(data.map(v => v + 5))}>
+        <Button
+          size="tiny"
+          as="a"
+          primary
+          onClick={() => setData(data.map(v => v + 5))}
+        >
           Update Data
-        </button>
-        <button onClick={() => setData(data.filter(v => v < 35))}>
+        </Button>
+        <Button
+          size="tiny"
+          as="a"
+          primary
+          onClick={() => setData(data.filter(v => v < 35))}
+        >
           {`Filter Data < 35`}
-        </button>
-        <button onClick={() => setData(origData)}>Restore Data</button>
+        </Button>
+        <Button size="tiny" as="a" primary onClick={() => setData(origData)}>
+          Restore Data
+        </Button>
       </div>
     </React.Fragment>
   );

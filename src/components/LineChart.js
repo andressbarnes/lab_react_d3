@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { select, line, curveCardinal } from 'd3';
+import { Segment, Button } from 'semantic-ui-react';
 
 const LineChart = () => {
   const origData = [18, 20, 90, 70, 30, 50];
@@ -24,21 +25,24 @@ const LineChart = () => {
   }, [data]);
   return (
     <React.Fragment>
-      <div>Data: [{data.map(e => `${e},`)}]</div>
+      <Segment>Data: [{data.map(e => `${e},`)}]</Segment>
       <svg
-        className="d3-component"
+        className="d3-component mb"
         width="500"
         height="200"
         ref={svgLineRef}
       ></svg>
       <div>
-        <button
+        <Button
+          size="tiny"
+          as="a"
+          primary
           onClick={() =>
             setData(data.map(v => Math.floor(Math.random() * Math.floor(200))))
           }
         >
           Update Data
-        </button>
+        </Button>
       </div>
     </React.Fragment>
   );
