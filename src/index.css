@@ -31,6 +31,7 @@ svg {
 
 .d3-responsive {
   width: 100%;
+  display: block;
 }
 
 .mb {
